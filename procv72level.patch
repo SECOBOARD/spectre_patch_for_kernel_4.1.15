@@ -1,0 +1,31 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/mm/proc-v7-2level.S	2018-06-03 21:15:06.343245307 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/mm/proc-v7-2level.S	2018-06-03 12:16:10.560106106 +0530
+@@ -36,8 +36,17 @@
+  *
+  *	It is assumed that:
+  *	- we are not using split page tables
++ *
++ *	Cortex-A15 requires ACTLR[0] to be set from secure in order
++ *	for the icache invalidation to also invalidate the BTB.
+  */
+-ENTRY(cpu_ca8_switch_mm)
++ENTRY(cpu_v7_icinv_switch_mm)
++#ifdef CONFIG_MMU
++	mcr	p15, 0, r0, c7, c5, 0		@ ICIALLU
++	/* Fall through to switch_mm... */
++#endif
++
++ENTRY(cpu_v7_btbinv_switch_mm)
+ #ifdef CONFIG_MMU
+ 	mov	r2, #0
+ #ifdef CONFIG_ARM_ERRATA_430973
+@@ -64,7 +73,8 @@
+ #endif
+ 	bx	lr
+ ENDPROC(cpu_v7_switch_mm)
+-ENDPROC(cpu_ca8_switch_mm)
++ENDPROC(cpu_v7_btbinv_switch_mm)
++ENDPROC(cpu_v7_icinv_switch_mm)
+ 
+ /*
+  *	cpu_v7_set_pte_ext(ptep, pte)

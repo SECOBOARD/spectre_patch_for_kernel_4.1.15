@@ -1,0 +1,11 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/kvm/Makefile	2018-06-03 21:15:06.215245313 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/kvm/Makefile	2018-06-03 12:38:37.452134736 +0530
+@@ -17,6 +17,8 @@
+ KVM := ../../../virt/kvm
+ kvm-arm-y = $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o $(KVM)/eventfd.o
+ 
++obj-$(CONFIG_KVM_ARM_HOST) += hyp/
++
+ obj-y += kvm-arm.o init.o interrupts.o
+ obj-y += arm.o handle_exit.o guest.o mmu.o emulate.o reset.o
+ obj-y += coproc.o coproc_a15.o coproc_a7.o mmio.o psci.o perf.o

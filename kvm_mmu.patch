@@ -1,0 +1,41 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/include/asm/kvm_mmu.h	2018-06-03 21:15:06.051245320 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/include/asm/kvm_mmu.h	2018-06-03 12:31:47.964126032 +0530
+@@ -47,6 +47,7 @@
+ #include <linux/highmem.h>
+ #include <asm/cacheflush.h>
+ #include <asm/pgalloc.h>
++#include <asm/cputype.h>
+ 
+ int create_hyp_mappings(void *from, void *to);
+ int create_hyp_io_mappings(void *from, void *to, phys_addr_t);
+@@ -279,6 +280,30 @@
+ 				       pgd_t *merged_hyp_pgd,
+ 				       unsigned long hyp_idmap_start) { }
+ 
++static inline void *kvm_get_hyp_vector(void)
++{
++	switch(read_cpuid_part()) {
++#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
++	case ARM_CPU_PART_CORTEX_A12:
++	case ARM_CPU_PART_CORTEX_A17:
++	{
++		extern char __kvm_hyp_vector_bp_inv[];
++		return kvm_ksym_ref(__kvm_hyp_vector_bp_inv);
++	}
++	case ARM_CPU_PART_CORTEX_A15:
++	{
++		extern char __kvm_hyp_vector_ic_inv[];
++		return kvm_ksym_ref(__kvm_hyp_vector_ic_inv);
++	}
++#endif
++	default:
++	{
++		extern char __kvm_hyp_vector[];
++		return kvm_ksym_ref(__kvm_hyp_vector);
++	}
++	}
++}
++
+ #endif	/* !__ASSEMBLY__ */
+ 
+ #endif /* __ARM_KVM_MMU_H__ */

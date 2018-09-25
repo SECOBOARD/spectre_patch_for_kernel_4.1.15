@@ -1,0 +1,11 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/include/asm/kvm_asm.h	2018-06-03 21:15:06.051245320 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/include/asm/kvm_asm.h	2018-06-03 12:00:12.972085752 +0530
+@@ -89,7 +89,7 @@
+ extern char __kvm_hyp_exit[];
+ extern char __kvm_hyp_exit_end[];
+ 
+-extern char __kvm_hyp_vector[];
++//extern char __kvm_hyp_vector[];
+ 
+ extern char __kvm_hyp_code_start[];
+ extern char __kvm_hyp_code_end[];

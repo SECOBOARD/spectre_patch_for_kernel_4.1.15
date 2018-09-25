@@ -1,0 +1,20 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/mm/fsr-2level.c	2018-06-03 21:15:06.343245307 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/mm/fsr-2level.c	2018-06-03 11:56:09.496080576 +0530
+@@ -50,7 +50,7 @@
+ 	{ do_bad,		SIGBUS,  0,		"unknown 4"			   },
+ 	{ do_translation_fault,	SIGSEGV, SEGV_MAPERR,	"section translation fault"	   },
+ 	{ do_bad,		SIGSEGV, SEGV_ACCERR,	"page access flag fault"	   },
+-	{ do_page_fault,	SIGSEGV, SEGV_MAPERR,	"page translation fault"	   },
++	{ do_pabt_page_fault,	SIGSEGV, SEGV_MAPERR,	"page translation fault"	   },
+ 	{ do_bad,		SIGBUS,	 0,		"external abort on non-linefetch"  },
+ 	{ do_bad,		SIGSEGV, SEGV_ACCERR,	"section domain fault"		   },
+ 	{ do_bad,		SIGBUS,  0,		"unknown 10"			   },
+@@ -58,7 +58,7 @@
+ 	{ do_bad,		SIGBUS,	 0,		"external abort on translation"	   },
+ 	{ do_sect_fault,	SIGSEGV, SEGV_ACCERR,	"section permission fault"	   },
+ 	{ do_bad,		SIGBUS,	 0,		"external abort on translation"	   },
+-	{ do_page_fault,	SIGSEGV, SEGV_ACCERR,	"page permission fault"		   },
++	{ do_pabt_page_fault,	SIGSEGV, SEGV_ACCERR,	"page permission fault"		   },
+ 	{ do_bad,		SIGBUS,  0,		"unknown 16"			   },
+ 	{ do_bad,		SIGBUS,  0,		"unknown 17"			   },
+ 	{ do_bad,		SIGBUS,  0,		"unknown 18"			   },

@@ -1,0 +1,51 @@
+--- /home/mathanmurugan/Desktop/patch_update/linux-4-1-15-secoboards-imx6/arch/arm/mm/fault.c	2018-06-03 21:15:06.343245307 +0530
++++ /home/mathanmurugan/linux-4-1-15-secoboards-imx6/arch/arm/mm/fault.c	2018-06-03 12:29:40.412123321 +0530
+@@ -20,6 +20,7 @@
+ #include <linux/highmem.h>
+ #include <linux/perf_event.h>
+ 
++#include <asm/cp15.h>
+ #include <asm/exception.h>
+ #include <asm/pgtable.h>
+ #include <asm/system_misc.h>
+@@ -392,12 +393,40 @@
+ 	__do_kernel_fault(mm, addr, fsr, regs);
+ 	return 0;
+ }
++
++static int __maybe_unused
++do_pabt_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
++{
++#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
++	if (addr > TASK_SIZE) {
++		switch (read_cpuid_part()) {
++		case ARM_CPU_PART_CORTEX_A8:
++		case ARM_CPU_PART_CORTEX_A9:
++		case ARM_CPU_PART_CORTEX_A12:
++		case ARM_CPU_PART_CORTEX_A17:
++			write_sysreg(0, BPIALL);
++			break;
++
++		case ARM_CPU_PART_CORTEX_A15:
++			write_sysreg(0, ICIALLU);
++			break;
++		}
++	}
++#endif
++	return do_page_fault(addr, fsr, regs);
++}
+ #else					/* CONFIG_MMU */
+ static int
+ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ {
+ 	return 0;
+ }
++
++static int
++do_pabt_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
++{
++	return 0;
++}
+ #endif					/* CONFIG_MMU */
+ 
+ /*
