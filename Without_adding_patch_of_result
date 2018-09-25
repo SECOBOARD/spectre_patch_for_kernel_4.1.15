@@ -1,0 +1,57 @@
+root@seco-q7-qd-256mbx4:/# cd opt/
+root@seco-q7-qd-256mbx4:/opt# ./spectre-meltdown-checker.sh 
+Spectre and Meltdown mitigation detection tool v0.37+
+
+Checking for vulnerabilities on current system
+Kernel is Linux 4.1.15-ge6af3743 #1 SMP PREEMPT Thu Mar 15 12:31:22 CET 2018 armv7l
+CPU is ARM v7 model 0xc09
+We're missing some kernel info (see -v), accuracy might be reduced
+
+Hardware check
+* CPU vulnerability to the speculative execution attack variants
+  * Vulnerable to Variant 1:  YES 
+  * Vulnerable to Variant 2:  YES 
+  * Vulnerable to Variant 3:  NO 
+  * Vulnerable to Variant 3a:  NO 
+  * Vulnerable to Variant 4:  NO 
+
+CVE-2017-5753 [bounds check bypass] aka 'Spectre Variant 1'
+* Kernel has array_index_mask_nospec (x86):  UNKNOWN  (couldn't check (couldn't find your kernel image in /boot, if you used netboot, this is normal))
+* Kernel has the Red Hat/Ubuntu patch:  UNKNOWN  (couldn't check (couldn't find your kernel image in /boot, if you used netboot, this is normal))
+* Kernel has mask_nospec64 (arm):  UNKNOWN  (couldn't check (couldn't find your kernel image in /boot, if you used netboot, this is normal))
+* Checking count of LFENCE instructions following a jump in kernel...  UNKNOWN  (couldn't check (couldn't find your kernel image in /boot, if you used netboot, this is normal))
+> STATUS:  UNKNOWN  (Couldn't find kernel image or tools missing to execute the checks)
+
+> How to fix: Re-run this script with root privileges, after installing the missing tools indicated above
+
+CVE-2017-5715 [branch target injection] aka 'Spectre Variant 2'
+* Mitigation 1
+  * Kernel is compiled with IBRS support:  NO 
+    * IBRS enabled and active:  NO 
+  * Kernel is compiled with IBPB support:  UNKNOWN  (in offline mode, we need the kernel image to be able to tell)
+    * IBPB enabled and active:  NO 
+* Mitigation 2
+  * Kernel has branch predictor hardening (arm):  NO 
+  * Kernel compiled with retpoline option:  NO 
+> STATUS:  VULNERABLE  (Branch predictor hardening is needed to mitigate the vulnerability)
+
+> How to fix: Your kernel has not been compiled with the CONFIG_UNMAP_KERNEL_AT_EL0 option, recompile it with this option enabled.
+
+CVE-2017-5754 [rogue data cache load] aka 'Meltdown' aka 'Variant 3'
+* Kernel supports Page Table Isolation (PTI):  NO 
+  * PTI enabled and active:  NO 
+  * Reduced performance impact of PTI:  NO  (PCID/INVPCID not supported, performance impact of PTI will be significant)
+* Running as a Xen PV DomU:  NO 
+> STATUS:  NOT VULNERABLE  (your CPU vendor reported your CPU model as not vulnerable)
+
+CVE-2018-3640 [rogue system register read] aka 'Variant 3a'
+* CPU microcode mitigates the vulnerability:  NO 
+> STATUS:  NOT VULNERABLE  (your CPU vendor reported your CPU model as not vulnerable)
+
+CVE-2018-3639 [speculative store bypass] aka 'Variant 4'
+* Kernel supports speculation store bypass:  NO 
+> STATUS:  NOT VULNERABLE  (your CPU vendor reported your CPU model as not vulnerable)
+
+A false sense of security is worse than no security at all, see --disclaimer
+root@seco-q7-qd-256mbx4:/opt# 
+
